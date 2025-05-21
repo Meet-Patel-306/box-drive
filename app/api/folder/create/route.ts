@@ -43,12 +43,16 @@ export async function POST(req: NextRequest) {
           { status: 404 }
         );
       }
-      //   create folder in database
+      // create folder in database
+      // we don't save folder in imageKit but we save data about folder in neon db
+      // that help us to access file and folder structure
+      // we give same define path for each folder
       const folderData = {
         name: name.trim(),
         size: 0,
-        path: `/folder/${userId}/${uuid4()}`,
+        path: `/box-drive-folder/${userId}/${uuid4()}`,
         type: "folder",
+        // folder not storage in imagekit so fileUrl not get
         fileUrl: "",
         thumbnailUrl: null,
         userId: userId!,

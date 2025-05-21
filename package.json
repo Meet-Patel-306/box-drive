@@ -18,6 +18,7 @@
     "@neondatabase/serverless": "^1.0.0",
     "@radix-ui/react-label": "^2.1.6",
     "@radix-ui/react-slot": "^1.2.2",
+    "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.5.0",
@@ -30,6 +31,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
+    "react-hot-toast": "^2.5.2",
     "tailwind-merge": "^3.3.0",
     "uuid": "^11.1.0",
     "zod": "^3.25.1"

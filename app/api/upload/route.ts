@@ -3,6 +3,7 @@ import { files } from "@/lib/db/schema";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+// 1st upload using other way after save imageKit meta data in neon db and file data also
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
