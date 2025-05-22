@@ -9,27 +9,24 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Plus } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
-export default function FileUpload() {
-  const [createFolderOpen, setCreateFolderOpen] = useState(false);
+interface FileUploadInterface {
+  userId: string;
+  currentFolder: string;
+}
+
+export default function FileUpload({
+  userId,
+  currentFolder,
+}: FileUploadInterface) {
+  const searchParams = useSearchParams();
+  const [createFolderOpen, setCreateFolderOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleDivClick = () => {
     fileInputRef.current?.click();
   };
-  const uploadFile = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post("/api/file/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("File Save");
-    } catch (err: any) {
-      toast(err);
-    }
-  };
+  // upload file on submit
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const file = fileInputRef.current?.files || null;
@@ -38,6 +35,10 @@ export default function FileUpload() {
       try {
         const formData = new FormData();
         formData.append("file", file[0]);
+        formData.append("userId", userId);
+        if (currentFolder) {
+          formData.append("parentId", currentFolder);
+        }
         const res = await axios.post("/api/file/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -54,7 +55,7 @@ export default function FileUpload() {
   };
   return (
     <>
-      <Card className="lg:w-1/5 md:w-1/3 mx-2">
+      <Card className=" mx-2">
         <CardContent className="p-6 space-y-4">
           {/* folder create */}
           <div
@@ -97,7 +98,10 @@ export default function FileUpload() {
       {/* folder create form */}
       {createFolderOpen && (
         <div className="fixed inset-0 z-50 flex w-full h-full items-center justify-center bg-black/50">
-          <CreateFolderForm onCloseClick={setCreateFolderOpen} />
+          <CreateFolderForm
+            onCloseClick={setCreateFolderOpen}
+            closeClick={createFolderOpen}
+          />
         </div>
       )}
     </>

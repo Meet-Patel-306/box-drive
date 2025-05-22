@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const formData = await req.formData();
-    // const formUserId = formData.get("userId") as string;
+    const formUserId = formData.get("userId") as string;
     const parentId = (formData.get("parentId") as string) || null;
     const file = formData.get("file") as File;
-    // if (formUserId !== userId) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+    if (formUserId !== userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     if (!file) {
       return NextResponse.json(
         { error: "Upload file or image" },

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         .from(files)
         .where(
           and(
-            eq(files.parentId, parentId),
+            eq(files.id, parentId),
             eq(files.userId, userId),
             eq(files.isFolder, true)
           )
@@ -43,28 +43,28 @@ export async function POST(req: NextRequest) {
           { status: 404 }
         );
       }
-      // create folder in database
-      // we don't save folder in imageKit but we save data about folder in neon db
-      // that help us to access file and folder structure
-      // we give same define path for each folder
-      const folderData = {
-        name: name.trim(),
-        size: 0,
-        path: `/box-drive-folder/${userId}/${uuid4()}`,
-        type: "folder",
-        // folder not storage in imagekit so fileUrl not get
-        fileUrl: "",
-        thumbnailUrl: null,
-        userId: userId!,
-        parentId: parentId,
-        isFolder: true,
-      };
-      const [newFolder] = await db.insert(files).values(folderData).returning();
-      return NextResponse.json({
-        message: "Folder created successfully",
-        folder: newFolder,
-      });
     }
+    // create folder in database
+    // we don't save folder in imageKit but we save data about folder in neon db
+    // that help us to access file and folder structure
+    // we give same define path for each folder
+    const folderData = {
+      name: name.trim(),
+      size: 0,
+      path: `/box-drive-folder/${userId}/${uuid4()}`,
+      type: "folder",
+      // folder not storage in imagekit so fileUrl not get
+      fileUrl: "",
+      thumbnailUrl: null,
+      userId: userId!,
+      parentId: parentId,
+      isFolder: true,
+    };
+    const [newFolder] = await db.insert(files).values(folderData).returning();
+    return NextResponse.json({
+      message: "Folder created successfully",
+      folder: newFolder,
+    });
   } catch (err) {
     console.error("Error creating folder:", err);
     return NextResponse.json(

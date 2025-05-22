@@ -15,12 +15,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
+import axios from "axios";
 
 type Props = {
-  onCloseClick: () => void;
+  onCloseClick: (value: boolean) => void;
+  closeClick: boolean;
 };
 
-export default function CreateFolderForm({ onCloseClick }: Props) {
+export default function CreateFolderForm({ onCloseClick, closeClick }: Props) {
+  // create folder on submit
   const createFolderFormSchema = z.object({
     name: z.string().min(2).max(50),
   });
@@ -30,16 +33,27 @@ export default function CreateFolderForm({ onCloseClick }: Props) {
       name: "",
     },
   });
+  const onSubmitCreateFolder = (
+    data: z.infer<typeof createFolderFormSchema>
+  ) => {
+    try {
+      const res = axios.post("/api/folder/create", { name: data.name });
+      console.log(res);
+      onCloseClick(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="w-full h-full flex justify-center items-center ">
-      <div className="w-1/5 border-2 border-gray-200 p-4 rounded-lg bg-white">
+      <div className="lg:w-1/5 md:w-1/3 w-10/12 border-2 border-gray-200 p-4 rounded-lg bg-white">
         <div className="flex justify-end pr-2">
-          <X />
+          <X onClick={() => onCloseClick(!closeClick)} />
         </div>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit(onSubmitCreateFolder)}
             className="space-y-8"
           >
             <FormField
@@ -49,7 +63,7 @@ export default function CreateFolderForm({ onCloseClick }: Props) {
                 <FormItem>
                   <FormLabel>Folder Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="untitle" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
