@@ -93,11 +93,11 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
         <div className="w-1/4">Name</div>
       </div>
       {fileListData === null ? (
-        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl bg-muted shadow-inner">
+        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : fileListData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl bg-muted shadow-inner">
+        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl r">
           <FolderX className="h-8 w-8 text-muted-foreground" />
           <p className="text-sm font-medium text-muted-foreground">
             No files found in this folder.

@@ -1,4 +1,5 @@
 "use client";
+import RenameForm from "@/components/RenameForm";
 import { Card } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import {
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import axios from "axios";
 interface FileData {
   id: string;
@@ -31,6 +33,7 @@ interface FileCardListProps {
   userId: string;
 }
 export default function FileCardList({ file, userId }: FileCardListProps) {
+  const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false);
   const router = useRouter();
   const makeStarred = async () => {
     try {
@@ -133,7 +136,7 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                   }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
-                    makeTrash();
+                    setRenameFormOpen(true);
                   }}
                 >
                   Rename
@@ -253,7 +256,7 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                   }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
-                    makeTrash();
+                    setRenameFormOpen(true);
                   }}
                 >
                   Rename
@@ -304,6 +307,15 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
           </div>
         </div>
       </Card>
+      {renameFormOpen && (
+        <div className="fixed inset-0 z-50 flex w-full h-full items-center justify-center bg-black/50">
+          <RenameForm
+            fileId={file.id || ""}
+            closeClick={renameFormOpen}
+            onCloseClick={setRenameFormOpen}
+          />
+        </div>
+      )}
     </div>
   );
 }

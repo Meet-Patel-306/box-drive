@@ -1,4 +1,5 @@
 "use client";
+import RenameForm from "@/components/RenameForm";
 import { Card } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
@@ -10,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { MoreVertical } from "lucide-react";
 import axios from "axios";
+import { useState } from "react";
 interface FileData {
   id: string;
   name: string;
@@ -32,6 +34,7 @@ interface FileCardProps {
   userId: string;
 }
 export default function FileCard({ file, userId }: FileCardProps) {
+  const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false);
   const router = useRouter();
   const makeStarred = async () => {
     try {
@@ -59,120 +62,141 @@ export default function FileCard({ file, userId }: FileCardProps) {
     }
   };
   return (
-    <Card
-      className="w-[320px] h-[180px] p-6 grid gap-6 m-2"
-      onClick={onClickFolderOpen}
-    >
-      <div className="flex items-center gap-4">
-        <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-12">
-          {file.thumbnailUrl ? (
-            <img src={file.thumbnailUrl} className="w-6 h-6" loading="lazy" />
-          ) : (
-            <FileIcon className="w-10 h-10 text-muted-foreground" />
-          )}
-        </div>
-        <div className="grid gap-1">
-          <div className="font-semibold">{file?.name}</div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <FileTypeIcon className="w-4 h-4" />
-            <span>{file?.type.split("/").pop()}</span>
-            <Separator orientation="vertical" className="h-4" />
-            <FileIcon className="w-4 h-4" />
-            <span>{(file?.size / (1024 * 1024)).toFixed(2)} MB</span>
+    <>
+      <Card
+        className="w-[320px] h-[180px] p-6 grid gap-6 m-2"
+        onClick={onClickFolderOpen}
+      >
+        <div className="flex items-center gap-4">
+          <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-12">
+            {file.thumbnailUrl ? (
+              <img src={file.thumbnailUrl} className="w-6 h-6" loading="lazy" />
+            ) : (
+              <FileIcon className="w-10 h-10 text-muted-foreground" />
+            )}
           </div>
-        </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            {/* This div intercepts the click to prevent triggering the card's onClick */}
-            <div
-              onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-                e.stopPropagation();
-              }}
-            >
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-5 w-5 text-gray-600" />
-              </Button>
+          <div className="grid gap-1">
+            <div className="font-semibold">{file?.name}</div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <FileTypeIcon className="w-4 h-4" />
+              <span>{file?.type.split("/").pop()}</span>
+              <Separator orientation="vertical" className="h-4" />
+              <FileIcon className="w-4 h-4" />
+              <span>{(file?.size / (1024 * 1024)).toFixed(2)} MB</span>
             </div>
-          </PopoverTrigger>
-          <PopoverContent className="w-48 p-2 space-y-1">
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${file.isTrash ? "hidden" : ""}`}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                onClickFolderOpen();
-              }}
-            >
-              Open
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${file.isTrash ? "hidden" : ""}`}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                makeStarred();
-              }}
-            >
-              Starrted
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${file.isTrash ? "hidden" : ""}`}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                makeTrash();
-              }}
-            >
-              Rename
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${file.isTrash ? "hidden" : ""}`}
-            >
-              Download
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${file.isTrash ? "" : "hidden"}`}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                makeTrash();
-              }}
-            >
-              Restore
-            </Button>
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              {/* This div intercepts the click to prevent triggering the card's onClick */}
+              <div
+                onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-5 w-5 text-gray-600" />
+                </Button>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-2 space-y-1">
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "hidden" : ""
+                }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  onClickFolderOpen();
+                }}
+              >
+                Open
+              </Button>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "hidden" : ""
+                }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  makeStarred();
+                }}
+              >
+                Starrted
+              </Button>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "hidden" : ""
+                }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  setRenameFormOpen(true);
+                }}
+              >
+                Rename
+              </Button>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "hidden" : ""
+                }`}
+              >
+                Download
+              </Button>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "" : "hidden"
+                }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  makeTrash();
+                }}
+              >
+                Restore
+              </Button>
 
-            <Button
-              variant="ghost"
-              className={`w-full justify-start ${
-                file.isTrash ? "hidden" : "text-red-600"
-              }`}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                makeTrash();
-              }}
-            >
-              Trash
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start text-red-600 ${
-                file.isTrash ? "" : "hidden"
-              }`}
-            >
-              Delete
-            </Button>
-          </PopoverContent>
-        </Popover>
-      </div>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  file.isTrash ? "hidden" : "text-red-600"
+                }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  makeTrash();
+                }}
+              >
+                Trash
+              </Button>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start text-red-600 ${
+                  file.isTrash ? "" : "hidden"
+                }`}
+              >
+                Delete
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
 
-      <div>
-        <Button variant="ghost" size="sm">
-          <DownloadIcon className="w-4 h-4" />
-          <span>Download</span>
-        </Button>
-      </div>
-    </Card>
+        <div>
+          <Button variant="ghost" size="sm">
+            <DownloadIcon className="w-4 h-4" />
+            <span>Download</span>
+          </Button>
+        </div>
+      </Card>
+      {renameFormOpen && (
+        <div className="fixed inset-0 z-50 flex w-full h-full items-center justify-center bg-black/50">
+          <RenameForm
+            fileId={file.id || ""}
+            closeClick={renameFormOpen}
+            onCloseClick={setRenameFormOpen}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
