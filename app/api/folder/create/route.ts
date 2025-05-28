@@ -11,9 +11,12 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const body = await req.json();
-    const { name, userId: bodyUserId, parentId = null } = body;
-    if (bodyUserId !== userId) {
+    const formData = await req.formData();
+    const formUserId = formData.get("userId") as string;
+    const parentId = (formData.get("parentId") as string) || null;
+    const name = formData.get("name") as string;
+
+    if (formUserId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     if (!name || typeof name !== "string" || name.trim() === "") {

@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import FileCardList from "@/components/FileCardList";
 import axios from "axios";
-import { List } from "lucide-react";
+import { List, X } from "lucide-react";
 import { LayoutPanelTop } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { FolderX } from "lucide-react";
 
 interface FileData {
   id: string;
@@ -58,10 +60,10 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
     <>
       <div className="w-full flex mt-1 justify-end">
         <div
-          className={`flex py-3 w-24 justify-center h-5 items-center border-2 border-gray-900 rounded-2xl`}
+          className={`flex py-3 w-24 justify-center h-5 items-center border-2 border-gray-900 dark:border-gray-200 rounded-2xl`}
         >
           <div
-            className={`border-r-2 pr-2 border-gray-900 mr-2 ${
+            className={`border-r-2 pr-2 border-gray-900 dark:border-gray-200 mr-2 ${
               isListLayout ? "text-blue-600 font-extrabold" : ""
             }`}
             onClick={() => setIsListLayout(true)}
@@ -91,9 +93,16 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
         <div className="w-1/4">Name</div>
       </div>
       {fileListData === null ? (
-        <p>Loading files...</p>
+        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl bg-muted shadow-inner">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
       ) : fileListData.length === 0 ? (
-        <p>No files found in this folder.</p>
+        <div className="flex flex-col items-center justify-center h-full w-full gap-3 rounded-xl bg-muted shadow-inner">
+          <FolderX className="h-8 w-8 text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground">
+            No files found in this folder.
+          </p>
+        </div>
       ) : (
         <div
           className={`${

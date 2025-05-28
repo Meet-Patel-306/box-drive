@@ -101,6 +101,8 @@ export default function FileUpload({
           <CreateFolderForm
             onCloseClick={setCreateFolderOpen}
             closeClick={createFolderOpen}
+            userId={userId || ""}
+            currentFolder={currentFolder || ""}
           />
         </div>
       )}

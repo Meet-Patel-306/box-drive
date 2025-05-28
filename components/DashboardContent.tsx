@@ -2,6 +2,7 @@
 import { useSearchParams } from "next/navigation";
 import FileUpload from "@/components/FileUpload";
 import FileList from "@/components/FileList";
+import Navbar from "./Navbar";
 
 interface DashboardContentInterface {
   userId: string;
@@ -13,6 +14,7 @@ export default function DashboardContent({
   const currentFolder = searchParams.get("parentId") || null;
   return (
     <>
+      <Navbar />
       <div className="md:grid md:grid-cols-12 md:gap-1">
         <div className="md:col-start-1 md:col-end-4 ">
           <FileUpload

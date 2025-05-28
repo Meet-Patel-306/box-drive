@@ -16,13 +16,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type Props = {
   onCloseClick: (value: boolean) => void;
   closeClick: boolean;
+  userId: string;
+  currentFolder: string;
 };
 
-export default function CreateFolderForm({ onCloseClick, closeClick }: Props) {
+export default function CreateFolderForm({
+  onCloseClick,
+  closeClick,
+  userId,
+  currentFolder,
+}: Props) {
   // create folder on submit
   const createFolderFormSchema = z.object({
     name: z.string().min(2).max(50),
@@ -37,7 +45,14 @@ export default function CreateFolderForm({ onCloseClick, closeClick }: Props) {
     data: z.infer<typeof createFolderFormSchema>
   ) => {
     try {
-      const res = axios.post("/api/folder/create", { name: data.name });
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("userId", userId);
+      if (currentFolder) {
+        formData.append("parentId", currentFolder);
+      }
+      const res = axios.post("/api/folder/create", formData);
+      // toast.success("Folder Create");
       console.log(res);
       onCloseClick(false);
     } catch (err) {
