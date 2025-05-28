@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
+import FileCardList from "@/components/FileCardList";
 import axios from "axios";
+import { List } from "lucide-react";
+import { LayoutPanelTop } from "lucide-react";
 
 interface FileData {
   id: string;
@@ -27,6 +30,7 @@ interface FileListInterface {
 
 export default function FileList({ userId, currentFolder }: FileListInterface) {
   const [fileListData, setFileListData] = useState<FileData[] | null>(null);
+  const [isListLayout, setIsListLayout] = useState<boolean>(false);
   useEffect(() => {
     const fetchFileList = async () => {
       try {
@@ -52,17 +56,68 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
 
   return (
     <>
-      <div className="flex flex-wrap">
-        {fileListData === null ? (
-          <p>Loading files...</p>
-        ) : fileListData.length === 0 ? (
-          <p>No files found in this folder.</p>
-        ) : (
-          fileListData.map((file) => (
-            <FileCard key={file.id} userId={userId || ""} file={file} />
-          ))
-        )}
+      <div className="w-full flex mt-1 justify-end">
+        <div
+          className={`flex py-3 w-24 justify-center h-5 items-center border-2 border-gray-900 rounded-2xl`}
+        >
+          <div
+            className={`border-r-2 pr-2 border-gray-900 mr-2 ${
+              isListLayout ? "text-blue-600 font-extrabold" : ""
+            }`}
+            onClick={() => setIsListLayout(true)}
+          >
+            <List />
+          </div>
+          <div
+            className={`border-none ${
+              !isListLayout ? "text-blue-600 font-extrabold" : ""
+            }`}
+            onClick={() => setIsListLayout(false)}
+          >
+            <LayoutPanelTop />
+          </div>
+        </div>
       </div>
+      <div
+        className={`${
+          !isListLayout
+            ? "hidden"
+            : "grid grid-cols-4 w-full items-center px-4 font-medium border-x-0 rounded-none"
+        }`}
+      >
+        <div className="w-1/4"></div>
+        <div className="w-1/4">Type</div>
+        <div className="w-1/4">Size</div>
+        <div className="w-1/4">Name</div>
+      </div>
+      {fileListData === null ? (
+        <p>Loading files...</p>
+      ) : fileListData.length === 0 ? (
+        <p>No files found in this folder.</p>
+      ) : (
+        <div
+          className={`${
+            !isListLayout
+              ? "flex flex-wrap justify-center sm:justify-start"
+              : "block"
+          }`}
+        >
+          {fileListData.map((file) => (
+            <div key={file.id}>
+              <div className={`${!isListLayout ? " block" : "hidden"}`}>
+                <FileCard
+                  key={file.id + "block"}
+                  userId={userId || ""}
+                  file={file}
+                />
+              </div>
+              <div className={`${isListLayout ? "block" : "hidden "}`}>
+                <FileCardList key={file.id} userId={userId || ""} file={file} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }

@@ -1,0 +1,192 @@
+"use client";
+import { Card } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { MoreVertical } from "lucide-react";
+import { useRouter } from "next/navigation";
+interface FileData {
+  id: string;
+  name: string;
+  size: number;
+  path: string;
+  type: string;
+  fileUrl: string;
+  thumbnailUrl: string;
+  userId: string;
+  parentId: string | null;
+  isStarred: boolean;
+  isTrash: boolean;
+  isFolder: boolean;
+  createAt: string;
+  updateAt: string;
+}
+
+interface FileCardListProps {
+  file: FileData;
+  userId: string;
+}
+export default function FileCardList({ file, userId }: FileCardListProps) {
+  const router = useRouter();
+  const onClickFolderOpen = () => {
+    if (file.isFolder) {
+      router.push(`/?userId=${userId}&parentId=${file.id}`);
+    }
+  };
+  return (
+    <div className="">
+      {/* File Rows */}
+      <Card
+        className="rounded-none border-y-2 md:block hidden"
+        onClick={onClickFolderOpen}
+      >
+        <div className="grid grid-cols-4 w-full items-center px-4 font-medium border-x-0 rounded-none">
+          <div className="aspect-square w-1/4">
+            {file.thumbnailUrl ? (
+              <img
+                src={
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                }
+                className="w-12 h-12"
+                loading="lazy"
+              />
+            ) : (
+              <FileIcon className="w-10 h-10 text-muted-foreground" />
+            )}
+          </div>
+          <div className="w-1/4">
+            <h1>{file?.type}</h1>
+          </div>
+          <div className="w-1/4">
+            <h1 className="text-[14px]">
+              {(file?.size / (1024 * 1024)).toFixed(2)} MB
+            </h1>
+          </div>
+          <div className="w-full flex items-center justify-between">
+            <h1 className="text-[14px]">{file?.name}</h1>
+            <Popover>
+              <PopoverTrigger asChild>
+                {/* This div intercepts the click to prevent triggering the card's onClick */}
+                <div
+                  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <Button variant="ghost" size="icon">
+                    <MoreVertical className="h-5 w-5 text-gray-600" />
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2 space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={onClickFolderOpen}
+                >
+                  Open
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Rename
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Download
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-red-600"
+                >
+                  Delete
+                </Button>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </Card>
+      <Card className="flex rounded-none px-4 py-3 hover:bg-gray-200 sm:hidden">
+        <div className="grid grid-cols-2">
+          <div className="flex items-center gap-3" onClick={onClickFolderOpen}>
+            {file.thumbnailUrl ? (
+              <img
+                src={
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                }
+                className="w-12 h-12"
+                loading="lazy"
+              />
+            ) : (
+              <FileIcon className="w-10 h-10 text-muted-foreground" />
+            )}
+            <div>
+              <div className="text-sm font-medium text-gray-900 text-[12px]">
+                {file?.name}
+              </div>
+              <div className="text-xs text-gray-500">
+                {(file?.size / (1024 * 1024)).toFixed(2)} MB
+              </div>
+            </div>
+          </div>
+          <div className="w-full flex justify-end">
+            <Popover>
+              <PopoverTrigger asChild>
+                {/* This div intercepts the click to prevent triggering the card's onClick */}
+                <div
+                  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <Button variant="ghost" size="icon">
+                    <MoreVertical className="h-5 w-5 text-gray-600" />
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2 space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={onClickFolderOpen}
+                >
+                  Open
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Rename
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Download
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-red-600"
+                >
+                  Delete
+                </Button>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function FileIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+    </svg>
+  );
+}

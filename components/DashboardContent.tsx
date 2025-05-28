@@ -14,16 +14,14 @@ export default function DashboardContent({
   return (
     <>
       <div className="md:grid md:grid-cols-12 md:gap-1">
-        <div className="md:col-start-1 lg:col-end-4 md:col-end-6">
+        <div className="md:col-start-1 md:col-end-4 ">
           <FileUpload
             userId={userId as string}
             currentFolder={currentFolder || ""}
           />
         </div>
-        <div className="lg:col-start-4 md:col-start-6 md:col-end-12">
-          <div className="flex flex-wrap">
-            <FileList userId={userId || ""} currentFolder={currentFolder} />
-          </div>
+        <div className="md:col-start-4 md:col-end-13 mr-1">
+          <FileList userId={userId || ""} currentFolder={currentFolder} />
         </div>
       </div>
     </>

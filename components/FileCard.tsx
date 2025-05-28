@@ -1,7 +1,14 @@
+"use client";
 import { Card } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import { MoreVertical } from "lucide-react";
 interface FileData {
   id: string;
   name: string;
@@ -32,22 +39,65 @@ export default function FileCard({ file, userId }: FileCardProps) {
     }
   };
   return (
-    <Card className="w-[300px] p-6 grid gap-6 m-2" onClick={onClickFolderOpen}>
+    <Card
+      className="w-[320px] h-[180px] p-6 grid gap-6 m-2"
+      onClick={onClickFolderOpen}
+    >
       <div className="flex items-center gap-4">
         <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-12">
-          <FileIcon className="w-6 h-6 text-muted-foreground" />
+          {file.thumbnailUrl ? (
+            <img src={file.thumbnailUrl} className="w-6 h-6" loading="lazy" />
+          ) : (
+            <FileIcon className="w-10 h-10 text-muted-foreground" />
+          )}
         </div>
         <div className="grid gap-1">
           <div className="font-semibold">{file?.name}</div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <FileTypeIcon className="w-4 h-4" />
-            <span>{file?.type}</span>
+            <span>{file?.type.split("/").pop()}</span>
             <Separator orientation="vertical" className="h-4" />
             <FileIcon className="w-4 h-4" />
             <span>{(file?.size / (1024 * 1024)).toFixed(2)} MB</span>
           </div>
         </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            {/* This div intercepts the click to prevent triggering the card's onClick */}
+            <div
+              onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                e.stopPropagation();
+              }}
+            >
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-5 w-5 text-gray-600" />
+              </Button>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-2 space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={onClickFolderOpen}
+            >
+              Open
+            </Button>
+            <Button variant="ghost" className="w-full justify-start">
+              Rename
+            </Button>
+            <Button variant="ghost" className="w-full justify-start">
+              Download
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-red-600"
+            >
+              Delete
+            </Button>
+          </PopoverContent>
+        </Popover>
       </div>
+
       <div>
         <Button variant="ghost" size="sm">
           <DownloadIcon className="w-4 h-4" />
