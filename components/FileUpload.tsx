@@ -20,7 +20,6 @@ export default function FileUpload({
   userId,
   currentFolder,
 }: FileUploadInterface) {
-  const searchParams = useSearchParams();
   const [createFolderOpen, setCreateFolderOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleDivClick = () => {
@@ -55,7 +54,7 @@ export default function FileUpload({
   };
   return (
     <>
-      <Card className=" mx-2">
+      <Card className="mt-1 mx-2">
         <CardContent className="p-6 space-y-4">
           {/* folder create */}
           <div

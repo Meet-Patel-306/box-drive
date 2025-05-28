@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 import { MoreVertical } from "lucide-react";
+import axios from "axios";
 interface FileData {
   id: string;
   name: string;
@@ -32,7 +33,15 @@ interface FileCardProps {
 }
 export default function FileCard({ file, userId }: FileCardProps) {
   const router = useRouter();
-
+  const makeStarred = async () => {
+    try {
+      const id = file.id;
+      const res = await axios.put(`/api/file/${id}/starred`);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const onClickFolderOpen = () => {
     if (file.isFolder) {
       router.push(`/?userId=${userId}&parentId=${file.id}`);
@@ -78,9 +87,23 @@ export default function FileCard({ file, userId }: FileCardProps) {
             <Button
               variant="ghost"
               className="w-full justify-start"
-              onClick={onClickFolderOpen}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                onClickFolderOpen();
+              }}
             >
               Open
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                makeStarred();
+                console.log("ok");
+              }}
+            >
+              Starrted
             </Button>
             <Button variant="ghost" className="w-full justify-start">
               Rename
