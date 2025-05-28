@@ -36,6 +36,7 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
     try {
       const id = file.id;
       const res = await axios.put(`/api/file/${id}/starred`);
+      router.push("/");
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -44,6 +45,16 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
   const onClickFolderOpen = () => {
     if (file.isFolder) {
       router.push(`/?userId=${userId}&parentId=${file.id}`);
+    }
+  };
+  const makeTrash = async () => {
+    try {
+      const id = file.id;
+      const res = await axios.put(`/api/file/${id}/trash`);
+      console.log(res);
+      router.push("/");
+    } catch (err) {
+      console.log(err);
     }
   };
   return (
@@ -93,7 +104,9 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
               <PopoverContent className="w-48 p-2 space-y-1">
                 <Button
                   variant="ghost"
-                  className="w-full justify-start"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     onClickFolderOpen();
@@ -103,24 +116,66 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     makeStarred();
-                    console.log("ok");
                   }}
                 >
                   Starrted
                 </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
                   Rename
                 </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
+                >
                   Download
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-red-600"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "" : "hidden"
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
+                  Restore
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : "text-red-600"
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
+                  Trash
+                </Button>
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start text-red-600 ${
+                    file.isTrash ? "" : "hidden"
+                  }`}
                 >
                   Delete
                 </Button>
@@ -169,7 +224,9 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
               <PopoverContent className="w-48 p-2 space-y-1">
                 <Button
                   variant="ghost"
-                  className="w-full justify-start"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     onClickFolderOpen();
@@ -179,24 +236,66 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     makeStarred();
-                    console.log("ok");
                   }}
                 >
                   Starrted
                 </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
                   Rename
                 </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : ""
+                  }`}
+                >
                   Download
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-red-600"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "" : "hidden"
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
+                  Restore
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start ${
+                    file.isTrash ? "hidden" : "text-red-600"
+                  }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    makeTrash();
+                  }}
+                >
+                  Trash
+                </Button>
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start text-red-600 ${
+                    file.isTrash ? "" : "hidden"
+                  }`}
                 >
                   Delete
                 </Button>

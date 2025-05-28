@@ -31,11 +31,11 @@ export async function PUT(
 
     const [updateFile] = await db
       .update(files)
-      .set({ isStarred: !file.isStarred })
+      .set({ isTrash: !file.isTrash })
       .where(and(eq(files.id, fileId), eq(files.userId, userId)))
       .returning();
-    console.log(file, "okok");
-    return NextResponse.json(updateFile);
+    const msg = updateFile.isTrash ? "move to trash" : "restore";
+    return NextResponse.json({ updateFile, msg: `File ${msg} successfully.` });
   } catch (err) {
     console.error("Error creating folder:", err);
     return NextResponse.json(

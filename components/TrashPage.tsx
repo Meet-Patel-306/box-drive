@@ -1,61 +1,36 @@
 "use client";
-import { useEffect, useState } from "react";
-import FileCard from "./FileCard";
-import FileCardList from "@/components/FileCardList";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import { FileData } from "./FileList"; // file data interface
+import { useEffect, useState } from "react";
 import { List, X } from "lucide-react";
 import { LayoutPanelTop } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { FolderX } from "lucide-react";
+import FileCard from "./FileCard";
+import FileCardList from "@/components/FileCardList";
+import FileUploadBtn from "./FileUploadBtn";
 
-export interface FileData {
-  id: string;
-  name: string;
-  size: number;
-  path: string;
-  type: string;
-  fileUrl: string;
-  thumbnailUrl: string;
+interface TrashPageInterface {
   userId: string;
-  parentId: string | null;
-  isStarred: boolean;
-  isTrash: boolean;
-  isFolder: boolean;
-  createAt: string;
-  updateAt: string;
 }
 
-export interface FileListInterface {
-  userId: string;
-  currentFolder: string | null;
-}
-
-export default function FileList({ userId, currentFolder }: FileListInterface) {
+export default function StarredPage({ userId }: TrashPageInterface) {
   const [fileListData, setFileListData] = useState<FileData[] | null>(null);
   const [isListLayout, setIsListLayout] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const currentFolder = searchParams.get("parentId") || null;
   useEffect(() => {
-    const fetchFileList = async () => {
+    const starredFiles = async () => {
       try {
-        let res;
-        console.log(currentFolder);
-        if (currentFolder) {
-          res = await axios.get(
-            `/api/file?userId=${userId}&parentId=${currentFolder}`
-          );
-        } else {
-          res = await axios.get(`/api/file?userId=${userId}`);
-        }
-
-        console.log(res);
-        console.log(typeof res.data);
+        const res = await axios.get("api/file/trash-file");
         setFileListData(res.data);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchFileList();
-  }, [currentFolder, userId]);
-
+    starredFiles();
+  }, []);
   return (
     <>
       <div className="w-full flex mt-1 justify-end">
@@ -84,7 +59,7 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
         className={`${
           !isListLayout
             ? "hidden"
-            : "sm:grid sm:grid-cols-4 w-full items-center px-4 font-medium border-x-0 rounded-none hidden"
+            : "grid grid-cols-4 w-full items-center px-4 font-medium border-x-0 rounded-none"
         }`}
       >
         <div className="w-1/4"></div>
@@ -109,32 +84,28 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
             !isListLayout
               ? "flex flex-wrap justify-center sm:justify-start"
               : "block"
-          } mt-1`}
+          }`}
         >
           {fileListData.map((file) => (
             <div key={file.id}>
-              {!file.isTrash && (
-                <>
-                  <div className={`${!isListLayout ? " block" : "hidden"}`}>
-                    <FileCard
-                      key={file.id + "block"}
-                      userId={userId || ""}
-                      file={file}
-                    />
-                  </div>
-                  <div className={`${isListLayout ? "block" : "hidden "}`}>
-                    <FileCardList
-                      key={file.id}
-                      userId={userId || ""}
-                      file={file}
-                    />
-                  </div>
-                </>
-              )}
+              <div className={`${!isListLayout ? " block" : "hidden"}`}>
+                <FileCard
+                  key={file.id + "block"}
+                  userId={userId || ""}
+                  file={file}
+                />
+              </div>
+              <div className={`${isListLayout ? "block" : "hidden "}`}>
+                <FileCardList key={file.id} userId={userId || ""} file={file} />
+              </div>
             </div>
           ))}
         </div>
       )}
+      <FileUploadBtn
+        userId={userId || ""}
+        currentFolder={currentFolder || ""}
+      />
     </>
   );
 }

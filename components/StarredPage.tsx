@@ -88,16 +88,24 @@ export default function StarredPage({ userId }: StarredPageInterface) {
         >
           {fileListData.map((file) => (
             <div key={file.id}>
-              <div className={`${!isListLayout ? " block" : "hidden"}`}>
-                <FileCard
-                  key={file.id + "block"}
-                  userId={userId || ""}
-                  file={file}
-                />
-              </div>
-              <div className={`${isListLayout ? "block" : "hidden "}`}>
-                <FileCardList key={file.id} userId={userId || ""} file={file} />
-              </div>
+              {!file.isTrash && (
+                <>
+                  <div className={`${!isListLayout ? " block" : "hidden"}`}>
+                    <FileCard
+                      key={file.id + "block"}
+                      userId={userId || ""}
+                      file={file}
+                    />
+                  </div>
+                  <div className={`${isListLayout ? "block" : "hidden "}`}>
+                    <FileCardList
+                      key={file.id}
+                      userId={userId || ""}
+                      file={file}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
