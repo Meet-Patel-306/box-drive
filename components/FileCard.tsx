@@ -13,6 +13,8 @@ import { MoreVertical } from "lucide-react";
 import { Star } from "lucide-react";
 import axios from "axios";
 import { useState } from "react";
+import { downloadFolder } from "@/lib/utils/downloadFolder";
+import { downloadFile } from "@/lib/utils/downloadFile";
 interface FileData {
   id: string;
   name: string;
@@ -60,6 +62,21 @@ export default function FileCard({
       console.log(res);
       setRefreshTrigger((prev: number) => prev + 1);
       router.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handelDownload = async () => {
+    try {
+      if (file.isFolder) {
+        const res = await axios.get(
+          `/api/folder/download?folderId=${file.id}&userId=${file.userId}`
+        );
+        console.log(res.data);
+        await downloadFolder(res.data);
+      } else {
+        await downloadFile(file.fileUrl, file.name);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -188,7 +205,7 @@ export default function FileCard({
           </Popover>
         </div>
         <div className="flex justify-between">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={handelDownload}>
             <DownloadIcon className="w-4 h-4" />
             <span>Download</span>
           </Button>

@@ -3,6 +3,7 @@ import { files } from "@/lib/db/schema";
 import { db } from "@/lib/db";
 import { eq, and, isNull } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { buildFolderTree } from "@/lib/utils/buildFolderTree";
 
 //feach file and folder
 export async function GET(req: NextRequest) {
@@ -15,17 +16,19 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const queryUserId = searchParams.get("userId");
     const folderId = searchParams.get("folderId") || "";
-    console.log(queryUserId, userId, queryUserId === userId);
     if (!queryUserId || queryUserId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const [folder] = await db
-      .select()
-      .from(files)
-      .where(and(eq(files.id, folderId), eq(files.userId, userId)));
-
-    if (!folder) {
-      return NextResponse.json({ error: "File not found" }, { status: 404 });
+    const folderTree = await buildFolderTree(folderId, userId);
+    if (!folderTree) {
+      return NextResponse.json({ error: "Folder not found" }, { status: 404 });
     }
-  } catch (err) {}
+    return NextResponse.json(folderTree);
+  } catch (err) {
+    console.error("Error fetching folder files:", err);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
