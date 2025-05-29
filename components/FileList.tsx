@@ -28,9 +28,16 @@ export interface FileData {
 export interface FileListInterface {
   userId: string;
   currentFolder: string | null;
+  refreshTrigger: number;
+  setRefreshTrigger: (prev: any) => any;
 }
 
-export default function FileList({ userId, currentFolder }: FileListInterface) {
+export default function FileList({
+  userId,
+  currentFolder,
+  refreshTrigger,
+  setRefreshTrigger,
+}: FileListInterface) {
   const [fileListData, setFileListData] = useState<FileData[] | null>(null);
   const [isListLayout, setIsListLayout] = useState<boolean>(false);
   useEffect(() => {
@@ -54,7 +61,7 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
       }
     };
     fetchFileList();
-  }, [currentFolder, userId]);
+  }, [currentFolder, userId, refreshTrigger]);
 
   return (
     <>
@@ -120,6 +127,7 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
                       key={file.id + "block"}
                       userId={userId || ""}
                       file={file}
+                      setRefreshTrigger={setRefreshTrigger}
                     />
                   </div>
                   <div className={`${isListLayout ? "block" : "hidden "}`}>
@@ -127,6 +135,7 @@ export default function FileList({ userId, currentFolder }: FileListInterface) {
                       key={file.id}
                       userId={userId || ""}
                       file={file}
+                      setRefreshTrigger={setRefreshTrigger}
                     />
                   </div>
                 </>

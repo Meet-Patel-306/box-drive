@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
@@ -31,14 +31,20 @@ interface FileData {
 interface FileCardListProps {
   file: FileData;
   userId: string;
+  setRefreshTrigger: (prev: any) => any;
 }
-export default function FileCardList({ file, userId }: FileCardListProps) {
+export default function FileCardList({
+  file,
+  userId,
+  setRefreshTrigger,
+}: FileCardListProps) {
   const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false);
   const router = useRouter();
   const makeStarred = async () => {
     try {
       const id = file.id;
       const res = await axios.put(`/api/file/${id}/starred`);
+      setRefreshTrigger((prev: number) => prev + 1);
       router.push("/");
       console.log(res);
     } catch (err) {
@@ -55,6 +61,7 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
       const id = file.id;
       const res = await axios.put(`/api/file/${id}/trash`);
       console.log(res);
+      setRefreshTrigger((prev: number) => prev + 1);
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -184,6 +191,11 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                 </Button>
               </PopoverContent>
             </Popover>
+            {file.isStarred && (
+              <span className="flex justify-end mr-2 text-amber-300">
+                <Star className="fill-amber-300" />
+              </span>
+            )}
           </div>
         </div>
       </Card>
@@ -304,6 +316,11 @@ export default function FileCardList({ file, userId }: FileCardListProps) {
                 </Button>
               </PopoverContent>
             </Popover>
+            {file.isStarred && (
+              <span className="flex justify-end mr-2 text-amber-300">
+                <Star className="fill-amber-300" />
+              </span>
+            )}
           </div>
         </div>
       </Card>

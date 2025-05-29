@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import FileUpload from "@/components/FileUpload";
 import FileList from "@/components/FileList";
 import FileUploadBtn from "@/components/FileUploadBtn";
+import { useState } from "react";
 
 interface DashboardContentInterface {
   userId: string;
@@ -10,6 +11,7 @@ interface DashboardContentInterface {
 export default function DashboardContent({
   userId,
 }: DashboardContentInterface) {
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const searchParams = useSearchParams();
   const currentFolder = searchParams.get("parentId") || null;
   return (
@@ -19,16 +21,23 @@ export default function DashboardContent({
           <FileUpload
             userId={userId as string}
             currentFolder={currentFolder || ""}
+            setRefreshTrigger={setRefreshTrigger}
           />
         </div>
         <div className="md:col-start-4 md:col-end-13 mr-1">
-          <FileList userId={userId || ""} currentFolder={currentFolder} />
+          <FileList
+            userId={userId || ""}
+            currentFolder={currentFolder}
+            refreshTrigger={refreshTrigger}
+            setRefreshTrigger={setRefreshTrigger}
+          />
         </div>
       </div>
       <div className="block sm:hidden">
         <FileUploadBtn
           userId={userId || ""}
           currentFolder={currentFolder || ""}
+          setRefreshTrigger={setRefreshTrigger}
         />
       </div>
     </>

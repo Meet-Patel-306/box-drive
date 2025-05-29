@@ -16,6 +16,7 @@ interface StarredPageInterface {
 }
 
 export default function StarredPage({ userId }: StarredPageInterface) {
+  const [refreshTriggerStarred, setRefreshTriggerStarred] = useState<number>(0);
   const [fileListData, setFileListData] = useState<FileData[] | null>(null);
   const [isListLayout, setIsListLayout] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -95,6 +96,7 @@ export default function StarredPage({ userId }: StarredPageInterface) {
                       key={file.id + "block"}
                       userId={userId || ""}
                       file={file}
+                      setRefreshTrigger={setRefreshTriggerStarred}
                     />
                   </div>
                   <div className={`${isListLayout ? "block" : "hidden "}`}>
@@ -102,6 +104,7 @@ export default function StarredPage({ userId }: StarredPageInterface) {
                       key={file.id}
                       userId={userId || ""}
                       file={file}
+                      setRefreshTrigger={setRefreshTriggerStarred}
                     />
                   </div>
                 </>
@@ -113,6 +116,7 @@ export default function StarredPage({ userId }: StarredPageInterface) {
       <FileUploadBtn
         userId={userId || ""}
         currentFolder={currentFolder || ""}
+        setRefreshTrigger={setRefreshTriggerStarred}
       />
     </>
   );

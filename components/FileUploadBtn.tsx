@@ -8,10 +8,12 @@ import FileUpload from "@/components/FileUpload";
 interface FileUploadBtnInterface {
   userId: string;
   currentFolder: string;
+  setRefreshTrigger: (prev: any) => any;
 }
 export default function FileUploadBtn({
   userId,
   currentFolder,
+  setRefreshTrigger,
 }: FileUploadBtnInterface) {
   const [showUploadForm, setShowUploadForm] = useState(false);
 
@@ -29,7 +31,11 @@ export default function FileUploadBtn({
       {showUploadForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-4 w-full max-w-md">
-            <FileUpload userId={userId || ""} currentFolder={currentFolder} />
+            <FileUpload
+              userId={userId || ""}
+              currentFolder={currentFolder}
+              setRefreshTrigger={setRefreshTrigger}
+            />
             <div className="flex justify-end mt-4">
               <Button
                 variant="secondary"

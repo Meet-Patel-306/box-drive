@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 import { MoreVertical } from "lucide-react";
+import { Star } from "lucide-react";
 import axios from "axios";
 import { useState } from "react";
 interface FileData {
@@ -32,8 +33,13 @@ interface FileData {
 interface FileCardProps {
   file: FileData;
   userId: string;
+  setRefreshTrigger: (prev: any) => any;
 }
-export default function FileCard({ file, userId }: FileCardProps) {
+export default function FileCard({
+  file,
+  userId,
+  setRefreshTrigger,
+}: FileCardProps) {
   const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false);
   const router = useRouter();
   const makeStarred = async () => {
@@ -42,6 +48,7 @@ export default function FileCard({ file, userId }: FileCardProps) {
       const res = await axios.put(`/api/file/${id}/starred`);
       console.log(res);
       router.push("/");
+      setRefreshTrigger((prev: number) => prev + 1);
     } catch (err) {
       console.log(err);
     }
@@ -51,6 +58,7 @@ export default function FileCard({ file, userId }: FileCardProps) {
       const id = file.id;
       const res = await axios.put(`/api/file/${id}/trash`);
       console.log(res);
+      setRefreshTrigger((prev: number) => prev + 1);
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -179,12 +187,16 @@ export default function FileCard({ file, userId }: FileCardProps) {
             </PopoverContent>
           </Popover>
         </div>
-
-        <div>
+        <div className="flex justify-between">
           <Button variant="ghost" size="sm">
             <DownloadIcon className="w-4 h-4" />
             <span>Download</span>
           </Button>
+          {file.isStarred && (
+            <span className="flex justify-end mr-2 text-amber-300">
+              <Star className="fill-amber-300" />
+            </span>
+          )}
         </div>
       </Card>
       {renameFormOpen && (

@@ -14,11 +14,13 @@ import { useSearchParams } from "next/navigation";
 interface FileUploadInterface {
   userId: string;
   currentFolder: string;
+  setRefreshTrigger: (prev: any) => any;
 }
 
 export default function FileUpload({
   userId,
   currentFolder,
+  setRefreshTrigger,
 }: FileUploadInterface) {
   const [createFolderOpen, setCreateFolderOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -44,6 +46,7 @@ export default function FileUpload({
           },
         });
         console.log(res);
+        setRefreshTrigger((prev: number) => prev + 1);
         toast.success("File Save");
       } catch (err: any) {
         toast(err);

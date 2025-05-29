@@ -16,6 +16,7 @@ interface TrashPageInterface {
 }
 
 export default function StarredPage({ userId }: TrashPageInterface) {
+  const [refreshTriggerTrash, setRefreshTriggerTrash] = useState<number>(0);
   const [fileListData, setFileListData] = useState<FileData[] | null>(null);
   const [isListLayout, setIsListLayout] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -30,7 +31,7 @@ export default function StarredPage({ userId }: TrashPageInterface) {
       }
     };
     starredFiles();
-  }, []);
+  }, [refreshTriggerTrash]);
   return (
     <>
       <div className="w-full flex mt-1 justify-end">
@@ -93,10 +94,16 @@ export default function StarredPage({ userId }: TrashPageInterface) {
                   key={file.id + "block"}
                   userId={userId || ""}
                   file={file}
+                  setRefreshTrigger={setRefreshTriggerTrash}
                 />
               </div>
               <div className={`${isListLayout ? "block" : "hidden "}`}>
-                <FileCardList key={file.id} userId={userId || ""} file={file} />
+                <FileCardList
+                  key={file.id}
+                  userId={userId || ""}
+                  file={file}
+                  setRefreshTrigger={setRefreshTriggerTrash}
+                />
               </div>
             </div>
           ))}
@@ -105,6 +112,7 @@ export default function StarredPage({ userId }: TrashPageInterface) {
       <FileUploadBtn
         userId={userId || ""}
         currentFolder={currentFolder || ""}
+        setRefreshTrigger={setRefreshTriggerTrash}
       />
     </>
   );
