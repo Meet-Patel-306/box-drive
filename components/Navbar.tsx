@@ -5,7 +5,13 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./DarkModeBtn";
+import UserCard from "./UserCard";
 
+interface userInterface {
+  emailAddress: string;
+  id: string;
+  imageUrl: string;
+}
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,14 +45,24 @@ export default function Navbar() {
               Trash
             </Link>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden md:flex">
             <ModeToggle />
+            <UserCard
+              name="meet"
+              avatarUrl="https://github.com/shadcn.png"
+              email="meet@gamil.com"
+            />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden">
-            <div>
+            <div className="flex">
               <ModeToggle />
+              <UserCard
+                name="meet"
+                avatarUrl="https://github.com/shadcn.png"
+                email="meet@gamil.com"
+              />
             </div>
             <Button
               variant="ghost"

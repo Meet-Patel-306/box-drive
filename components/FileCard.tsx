@@ -165,6 +165,10 @@ export default function FileCard({
                 className={`w-full justify-start ${
                   file.isTrash ? "hidden" : ""
                 }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  handelDownload();
+                }}
               >
                 Download
               </Button>
@@ -205,7 +209,14 @@ export default function FileCard({
           </Popover>
         </div>
         <div className="flex justify-between">
-          <Button variant="ghost" size="sm" onClick={handelDownload}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              handelDownload();
+            }}
+          >
             <DownloadIcon className="w-4 h-4" />
             <span>Download</span>
           </Button>

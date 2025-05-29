@@ -11,6 +11,8 @@ import { MoreVertical, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
+import { downloadFolder } from "@/lib/utils/downloadFolder";
+import { downloadFile } from "@/lib/utils/downloadFile";
 interface FileData {
   id: string;
   name: string;
@@ -54,6 +56,21 @@ export default function FileCardList({
   const onClickFolderOpen = () => {
     if (file.isFolder) {
       router.push(`/?userId=${userId}&parentId=${file.id}`);
+    }
+  };
+  const handelDownload = async () => {
+    try {
+      if (file.isFolder) {
+        const res = await axios.get(
+          `/api/folder/download?folderId=${file.id}&userId=${file.userId}`
+        );
+        console.log(res.data);
+        await downloadFolder(res.data);
+      } else {
+        await downloadFile(file.fileUrl, file.name);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   const makeTrash = async () => {
@@ -153,6 +170,10 @@ export default function FileCardList({
                   className={`w-full justify-start ${
                     file.isTrash ? "hidden" : ""
                   }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    handelDownload();
+                  }}
                 >
                   Download
                 </Button>
@@ -278,6 +299,10 @@ export default function FileCardList({
                   className={`w-full justify-start ${
                     file.isTrash ? "hidden" : ""
                   }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    handelDownload();
+                  }}
                 >
                   Download
                 </Button>
