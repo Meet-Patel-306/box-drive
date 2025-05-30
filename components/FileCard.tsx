@@ -81,6 +81,15 @@ export default function FileCard({
       console.log(err);
     }
   };
+  const handelDelete = async () => {
+    try {
+      const res = await axios.delete(`/api/file/${file.id}/delete`);
+      console.log(res);
+      setRefreshTrigger((prev: number) => prev + 1);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const onClickFolderOpen = () => {
     if (file.isFolder) {
       router.push(`/?userId=${userId}&parentId=${file.id}`);
@@ -202,6 +211,10 @@ export default function FileCard({
                 className={`w-full justify-start text-red-600 ${
                   file.isTrash ? "" : "hidden"
                 }`}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  handelDelete();
+                }}
               >
                 Delete
               </Button>

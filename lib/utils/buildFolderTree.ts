@@ -1,14 +1,27 @@
-// helpers/buildFolderTree.ts
 import { db } from "@/lib/db";
 import { files } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 
 type FileNode = {
+  id: string;
   name: string;
+  size: number;
+  path: string;
+  type: string;
   url: string;
+  thumbnailUrl: string | null;
+  userId: string;
+  parentId: string | null;
+  isStarred: boolean;
+  isTrash: boolean;
+  isFolder: boolean;
 };
 
 type FolderNode = {
+  id: string;
+  name: string;
+  isFolder: true;
+  userId: string;
   folderName: string;
   files: FileNode[];
   subfolders: FolderNode[];
@@ -63,9 +76,23 @@ export async function buildFolderTree(
 
   return {
     folderName: folder.name,
+    id: folder.id,
+    name: folder.name,
+    isFolder: true,
+    userId: folder.userId,
     files: fileList.map((f) => ({
       name: f.name,
       url: f.fileUrl, // assuming `fileUrl` is stored
+      id: f.id,
+      size: f.size,
+      path: f.path,
+      thumbnailUrl: f.thumbnailUrl || null,
+      parentId: f.parentId || null,
+      isFolder: f.isFolder,
+      isStarred: f.isStarred,
+      isTrash: f.isTrash,
+      userId: f.userId,
+      type: f.type,
     })),
     subfolders,
   };

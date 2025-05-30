@@ -28,9 +28,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { userId } = await auth();
-  if (!userId) {
-    redirect("/sign-in");
-  }
   const user = await currentUser();
   const userData = user
     ? {
@@ -53,7 +50,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar user={userData} />
+            {userId && <Navbar user={userData} />}
             {children}
           </ThemeProvider>
         </body>

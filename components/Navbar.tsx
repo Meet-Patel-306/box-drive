@@ -12,7 +12,10 @@ interface userInterface {
   id: string;
   imageUrl: string;
 }
-export default function Navbar() {
+interface navbarInterface {
+  user: userInterface;
+}
+export default function Navbar({ user }: navbarInterface) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -48,9 +51,8 @@ export default function Navbar() {
           <div className="hidden md:flex">
             <ModeToggle />
             <UserCard
-              name="meet"
-              avatarUrl="https://github.com/shadcn.png"
-              email="meet@gamil.com"
+              avatarUrl={user.imageUrl || ""}
+              email={user.emailAddress || ""}
             />
           </div>
 
@@ -59,9 +61,8 @@ export default function Navbar() {
             <div className="flex">
               <ModeToggle />
               <UserCard
-                name="meet"
-                avatarUrl="https://github.com/shadcn.png"
-                email="meet@gamil.com"
+                avatarUrl={user.imageUrl || ""}
+                email={user.emailAddress || ""}
               />
             </div>
             <Button
