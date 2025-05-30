@@ -13,6 +13,7 @@ import { useState } from "react";
 import axios from "axios";
 import { downloadFolder } from "@/lib/utils/downloadFolder";
 import { downloadFile } from "@/lib/utils/downloadFile";
+import { toast } from "react-hot-toast";
 interface FileData {
   id: string;
   name: string;
@@ -43,23 +44,49 @@ export default function FileCardList({
   const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false);
   const router = useRouter();
   const makeStarred = async () => {
-    try {
-      const id = file.id;
-      const res = await axios.put(`/api/file/${id}/starred`);
-      setRefreshTrigger((prev: number) => prev + 1);
-      router.push("/");
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
+    const id = file.id;
+    const fileIsStar = file.isStarred;
+    toast
+      .promise(axios.put(`/api/file/${id}/starred`), {
+        loading: `${fileIsStar ? "Removing Star..." : "Starring file..."}`,
+        success: `${
+          fileIsStar ? "File starred remove!" : "File starred successfully!"
+        }`,
+        error: "Failed to processing file.",
+      })
+      .then((res) => {
+        console.log(res);
+        router.push("/");
+        setRefreshTrigger((prev: number) => prev + 1);
+      });
   };
-  const onClickFolderOpen = () => {
-    if (file.isFolder) {
-      router.push(`/?userId=${userId}&parentId=${file.id}`);
-    }
+  const makeTrash = async () => {
+    const id = file.id;
+    const flieInTrash = file.isTrash;
+    toast
+      .promise(axios.put(`/api/file/${id}/trash`), {
+        loading: `${
+          flieInTrash ? "Restoring file..." : " Moving file to trash..."
+        }`,
+        success: `${
+          flieInTrash
+            ? "Restoring file successfully!"
+            : " Moving file to trash successfully!"
+        }`,
+        error: `${
+          flieInTrash ? "Failed to restore file." : "Failed to trash file."
+        }`,
+      })
+      .then((res) => {
+        console.log(res);
+        setRefreshTrigger((prev: number) => prev + 1);
+        router.push("/");
+      });
   };
+
   const handelDownload = async () => {
     try {
+      toast.loading("Preparing download...");
       if (file.isFolder) {
         const res = await axios.get(
           `/api/folder/download?folderId=${file.id}&userId=${file.userId}`
@@ -69,19 +96,30 @@ export default function FileCardList({
       } else {
         await downloadFile(file.fileUrl, file.name);
       }
+      toast.success("Download started.");
     } catch (err) {
       console.log(err);
+      toast.error("Download failed.");
+    } finally {
+      toast.dismiss(); // closes the loading toast
     }
   };
-  const makeTrash = async () => {
-    try {
-      const id = file.id;
-      const res = await axios.put(`/api/file/${id}/trash`);
-      console.log(res);
-      setRefreshTrigger((prev: number) => prev + 1);
-      router.push("/");
-    } catch (err) {
-      console.log(err);
+
+  const handelDelete = async () => {
+    toast
+      .promise(axios.delete(`/api/file/${file.id}/delete`), {
+        loading: "Deleting file...",
+        success: "File deleted!",
+        error: "Failed to delete file.",
+      })
+      .then((res) => {
+        console.log(res);
+        setRefreshTrigger((prev: number) => prev + 1);
+      });
+  };
+  const onClickFolderOpen = () => {
+    if (file.isFolder) {
+      router.push(`/?userId=${userId}&parentId=${file.id}`);
     }
   };
   return (
@@ -207,6 +245,10 @@ export default function FileCardList({
                   className={`w-full justify-start text-red-600 ${
                     file.isTrash ? "" : "hidden"
                   }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    handelDelete();
+                  }}
                 >
                   Delete
                 </Button>
@@ -336,6 +378,10 @@ export default function FileCardList({
                   className={`w-full justify-start text-red-600 ${
                     file.isTrash ? "" : "hidden"
                   }`}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.stopPropagation();
+                    handelDelete();
+                  }}
                 >
                   Delete
                 </Button>
