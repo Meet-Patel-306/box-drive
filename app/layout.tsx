@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster position="top-center" reverseOrder={false} />
             {userId && <Navbar user={userData} />}
             {children}
           </ThemeProvider>

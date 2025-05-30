@@ -7,7 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRef, useState } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
@@ -33,26 +33,32 @@ export default function FileUpload({
     const file = fileInputRef.current?.files || null;
     if (file && file.length > 0) {
       console.log(file[0]);
-      try {
-        const formData = new FormData();
-        formData.append("file", file[0]);
-        formData.append("userId", userId);
-        if (currentFolder) {
-          formData.append("parentId", currentFolder);
-        }
-        const res = await axios.post("/api/file/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(res);
-        setRefreshTrigger((prev: number) => prev + 1);
-        toast.success("File Save");
-      } catch (err: any) {
-        toast(err);
+      const formData = new FormData();
+      formData.append("file", file[0]);
+      formData.append("userId", userId);
+      if (currentFolder) {
+        formData.append("parentId", currentFolder);
       }
-    } else {
-      toast.error("No file selected.");
+      toast
+        .promise(
+          axios.post("/api/file/upload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }),
+          {
+            loading: "Uploading file...",
+            success: "File saved successfully!",
+            error: "File upload failed",
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setRefreshTrigger((prev: number) => prev + 1);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        });
     }
   };
   return (
