@@ -26,40 +26,58 @@ export default function FileUpload({
   const handleDivClick = () => {
     fileInputRef.current?.click();
   };
+
+  const uploadFile = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", userId);
+    if (currentFolder) {
+      formData.append("parentId", currentFolder);
+    }
+
+    toast
+      .promise(
+        axios.post("/api/file/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }),
+        {
+          loading: "Uploading file...",
+          success: "File saved successfully!",
+          error: "File upload failed",
+        }
+      )
+      .then((res) => {
+        setRefreshTrigger((prev: number) => prev + 1);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      });
+  };
+
   // upload file on submit
-  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const file = fileInputRef.current?.files || null;
-    if (file && file.length > 0) {
-      //console.log(file[0]);
-      const formData = new FormData();
-      formData.append("file", file[0]);
-      formData.append("userId", userId);
-      if (currentFolder) {
-        formData.append("parentId", currentFolder);
-      }
-      toast
-        .promise(
-          axios.post("/api/file/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }),
-          {
-            loading: "Uploading file...",
-            success: "File saved successfully!",
-            error: "File upload failed",
-          }
-        )
-        .then((res) => {
-          //console.log(res);
-          setRefreshTrigger((prev: number) => prev + 1);
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-        });
+    const files = fileInputRef.current?.files;
+    if (files && files.length > 0) {
+      uploadFile(files[0]);
     }
   };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      uploadFile(file);
+      e.dataTransfer.clearData();
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       <Card className="mt-1 mx-2">
@@ -76,6 +94,8 @@ export default function FileUpload({
           <div
             className="border-2 border-dashed border-gray-200 rounded-lg flex flex-col gap-1 p-6 items-center"
             onClick={handleDivClick}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
           >
             <FileIcon className="w-12 h-12" />
             <span className="text-sm font-medium text-gray-500">

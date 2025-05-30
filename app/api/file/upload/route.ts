@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
     const formUserId = formData.get("userId") as string;
     const parentId = (formData.get("parentId") as string) || null;
     const file = formData.get("file") as File;
+    let fileName = file.name.split(".")[0];
     if (formUserId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -102,6 +103,26 @@ export async function POST(req: NextRequest) {
     const folderPath = parentId
       ? `/box-drive/${userId}/folder/${parentId}`
       : `/box-drive/${userId}`;
+
+    let count = 1;
+    while (true) {
+      let fullname = fileName + "." + fileExtension;
+      const sameNameFile = await db
+        .select()
+        .from(files)
+        .where(and(eq(files.userId, userId), eq(files.name, fullname)));
+      if (!sameNameFile.length) {
+        console.log(count, sameNameFile);
+        break;
+      }
+      count =
+        Number(
+          sameNameFile[sameNameFile.length - 1].name.split(".")[0].split("(")[0]
+        ) + 1 || count;
+      console.log(count, sameNameFile);
+      fileName = file.name.split(".")[0] + "(" + count + ")";
+      count++;
+    }
     const uploadFile = await imagekit.upload({
       file: fileBuffer,
       fileName: uniqeName,
@@ -109,7 +130,7 @@ export async function POST(req: NextRequest) {
       useUniqueFileName: false,
     });
     const newFileData = {
-      name: originalName,
+      name: fileName + "." + fileExtension,
       size: file.size,
       path: folderPath,
       type: file.type,

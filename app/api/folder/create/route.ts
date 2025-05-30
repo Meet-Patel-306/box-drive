@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     const formUserId = formData.get("userId") as string;
     const parentId = (formData.get("parentId") as string) || null;
     const name = formData.get("name") as string;
+    let folderName = name.trim();
 
     if (formUserId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -47,12 +48,28 @@ export async function POST(req: NextRequest) {
         );
       }
     }
+    let count = 1;
+    while (true) {
+      const sameNameFolder = await db
+        .select()
+        .from(files)
+        .where(and(eq(files.userId, userId), eq(files.name, folderName)));
+      if (!sameNameFolder.length) {
+        break;
+      }
+      count =
+        Number(
+          sameNameFolder[sameNameFolder.length - 1].name.trim().split("(")[0]
+        ) + 1 || count;
+      folderName = name.trim() + "(" + count + ")";
+      count++;
+    }
     // create folder in database
     // we don't save folder in imageKit but we save data about folder in neon db
     // that help us to access file and folder structure
     // we give same define path for each folder
     const folderData = {
-      name: name.trim(),
+      name: folderName,
       size: 0,
       path: `/box-drive-folder/${userId}/${uuid4()}`,
       type: "folder",

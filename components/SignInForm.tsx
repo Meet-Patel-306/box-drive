@@ -32,6 +32,7 @@ export default function SignInForm() {
   const { isSignedIn, user } = useUser();
   const [signInError, setSignInError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isView, setIsView] = useState(false);
 
   const onSubmitSignIn: SubmitHandler<z.infer<typeof signInSchema>> = async (
     data
@@ -72,7 +73,7 @@ export default function SignInForm() {
           </div>
         ) : (
           <div className="w-full flex justify-center ">
-            <div className="w-2/3 space-y-6 border-2 border-gray-100 py-4 px-2 rounded-3xl">
+            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 py-4 px-2 rounded-3xl">
               <h1 className="text-2xl font-bold text-center">
                 SignUp Your Account
               </h1>
@@ -115,23 +116,23 @@ export default function SignInForm() {
                         <FormControl>
                           <div className="relative">
                             <Input
-                              type="password"
+                              type={`${isView ? "text" : "password"}`}
                               placeholder="********"
                               {...field}
                             />
-                            {/* {isView ? (
-                            <Eye
-                              className="absolute right-4 top-4 z-10 cursor-pointer text-gray-500"
-                              onClick={() => {
-                                setIsView(!isView), //console.log(isView);
-                              }}
-                            />
-                          ) : (
-                            <EyeOff
-                              className="absolute right-4 top-4 z-10 cursor-pointer text-gray-500"
-                              onClick={() => setIsView(!isView)}
-                            />
-                          )} */}
+                            {isView ? (
+                              <Eye
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => {
+                                  setIsView(!isView);
+                                }}
+                              />
+                            ) : (
+                              <EyeOff
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => setIsView(!isView)}
+                              />
+                            )}
                           </div>
                         </FormControl>
                         <FormMessage />

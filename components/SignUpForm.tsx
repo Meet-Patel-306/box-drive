@@ -22,6 +22,7 @@ import { Loader, AlertCircle, Eye, EyeOff } from "lucide-react";
 
 export default function SingUpForm() {
   const [isView, setIsView] = useState(false);
+  const [isView2, setIsView2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   //sign up
   const [authError, setAuthError] = useState<string | null>(null);
@@ -102,7 +103,7 @@ export default function SingUpForm() {
               <Loader className="mr-2 h-10 w-10 animate-spin" />
             </div>
           ) : (
-            <div className="w-full flex justify-center border-gray-100 py-4 px-2 rounded-3xl">
+            <div className="w-full flex justify-center border-gray-200 py-4 px-2 rounded-3xl">
               <div className=" space-y-6">
                 <h1 className="text-2xl font-bold text-default-900 mb-0">
                   Verify Your Email
@@ -164,7 +165,7 @@ export default function SingUpForm() {
           </div>
         ) : (
           <div className="w-full flex justify-center ">
-            <div className="w-2/3 space-y-6 border-2 border-gray-100 py-4 px-2 rounded-3xl">
+            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 py-4 px-2 rounded-3xl">
               <h1 className="text-2xl font-bold text-center">
                 Create Your Account
               </h1>
@@ -203,7 +204,7 @@ export default function SingUpForm() {
                         <FormControl>
                           <div className="relative">
                             <Input
-                              type="password"
+                              type={`${isView ? "text" : "password"}`}
                               placeholder="********"
                               {...field}
                             />
@@ -234,17 +235,32 @@ export default function SingUpForm() {
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="********"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={`${isView2 ? "text" : "password"}`}
+                              placeholder="********"
+                              {...field}
+                            />
+                            {isView2 ? (
+                              <Eye
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => {
+                                  setIsView2(!isView2);
+                                }}
+                              />
+                            ) : (
+                              <EyeOff
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => setIsView2(!isView2)}
+                              />
+                            )}
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
+                  <div id="clerk-captcha" className="mb-4" />
                   <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
