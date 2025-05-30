@@ -9,7 +9,6 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Plus } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 interface FileUploadInterface {
   userId: string;
@@ -32,7 +31,7 @@ export default function FileUpload({
     e.preventDefault();
     const file = fileInputRef.current?.files || null;
     if (file && file.length > 0) {
-      console.log(file[0]);
+      //console.log(file[0]);
       const formData = new FormData();
       formData.append("file", file[0]);
       formData.append("userId", userId);
@@ -53,7 +52,7 @@ export default function FileUpload({
           }
         )
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           setRefreshTrigger((prev: number) => prev + 1);
           if (fileInputRef.current) {
             fileInputRef.current.value = "";

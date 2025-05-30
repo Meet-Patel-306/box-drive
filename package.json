@@ -30,6 +30,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^12.12.1",
     "imagekit": "^6.0.0",
+    "imagekitio-react": "^4.3.0",
     "input-otp": "^1.4.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.511.0",

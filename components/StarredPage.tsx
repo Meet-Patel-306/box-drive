@@ -10,6 +10,7 @@ import { FolderX } from "lucide-react";
 import FileCard from "./FileCard";
 import FileCardList from "@/components/FileCardList";
 import FileUploadBtn from "./FileUploadBtn";
+import toast from "react-hot-toast";
 
 interface StarredPageInterface {
   userId: string;
@@ -27,7 +28,8 @@ export default function StarredPage({ userId }: StarredPageInterface) {
         const res = await axios.get("api/file/starred-file");
         setFileListData(res.data);
       } catch (err) {
-        console.log(err);
+        toast.error("failed to fetch data.");
+        //console.log(err);
       }
     };
     starredFiles();

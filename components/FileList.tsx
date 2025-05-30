@@ -44,7 +44,7 @@ export default function FileList({
     const fetchFileList = async () => {
       try {
         let res;
-        console.log(currentFolder);
+        //console.log(currentFolder);
         if (currentFolder) {
           res = await axios.get(
             `/api/file?userId=${userId}&parentId=${currentFolder}`
@@ -53,11 +53,11 @@ export default function FileList({
           res = await axios.get(`/api/file?userId=${userId}`);
         }
 
-        console.log(res);
-        console.log(typeof res.data);
+        //console.log(res);
+        //console.log(typeof res.data);
         setFileListData(res.data);
       } catch (err) {
-        console.log(err);
+        //console.log(err);
       }
     };
     fetchFileList();

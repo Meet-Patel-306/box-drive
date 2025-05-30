@@ -64,8 +64,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log("file == ", file);
-    console.log("form data==", formData);
+    //console.log("file == ", file);
+    //console.log("form data==", formData);
     //check parent exist and user own that
     if (parentId) {
       const [parentFolder] = await db

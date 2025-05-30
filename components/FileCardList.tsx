@@ -55,7 +55,7 @@ export default function FileCardList({
         error: "Failed to processing file.",
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         router.push("/");
         setRefreshTrigger((prev: number) => prev + 1);
       });
@@ -78,7 +78,7 @@ export default function FileCardList({
         }`,
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setRefreshTrigger((prev: number) => prev + 1);
         router.push("/");
       });
@@ -91,14 +91,14 @@ export default function FileCardList({
         const res = await axios.get(
           `/api/folder/download?folderId=${file.id}&userId=${file.userId}`
         );
-        console.log(res.data);
+        //console.log(res.data);
         await downloadFolder(res.data);
       } else {
         await downloadFile(file.fileUrl, file.name);
       }
       toast.success("Download started.");
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       toast.error("Download failed.");
     } finally {
       toast.dismiss(); // closes the loading toast
@@ -113,7 +113,7 @@ export default function FileCardList({
         error: "Failed to delete file.",
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setRefreshTrigger((prev: number) => prev + 1);
       });
   };

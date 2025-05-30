@@ -60,7 +60,7 @@ export default function SingUpForm() {
       });
       setVerify(true);
     } catch (err: any) {
-      console.log(err);
+      //console.log(err);
       setAuthError(
         err.errors?.[0]?.message || err.message || "Something went wrong"
       );
@@ -78,14 +78,14 @@ export default function SingUpForm() {
       const res = await signUp.attemptEmailAddressVerification({
         code: data.pin,
       });
-      console.log(res);
+      //console.log(res);
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
       } else {
-        console.log("err ", res);
+        //console.log("err ", res);
       }
     } catch (err: any) {
-      console.log(err);
+      //console.log(err);
       setVerifyError(
         err.errors?.[0]?.message || err.message || "Something went wrong"
       );
@@ -211,7 +211,7 @@ export default function SingUpForm() {
                               <Eye
                                 className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
                                 onClick={() => {
-                                  setIsView(!isView), console.log(isView);
+                                  setIsView(!isView);
                                 }}
                               />
                             ) : (

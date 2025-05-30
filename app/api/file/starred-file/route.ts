@@ -15,7 +15,7 @@ export async function GET() {
       .from(files)
       .where(and(eq(files.userId, userId), eq(files.isStarred, true)));
     // Convert BigInts to strings
-    console.log(filesStarAll);
+    //console.log(filesStarAll);
     const filesStar = filesStarAll.map((file: Record<string, unknown>) =>
       Object.fromEntries(
         Object.entries(file).map(([key, value]) => [

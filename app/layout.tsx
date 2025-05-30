@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
+import { unstable_ViewTransition as ViewTransition } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,20 +32,22 @@ export default async function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Toaster position="top-center" reverseOrder={false} />
-            <Navbar />
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
+      <ViewTransition>
+        <html lang="en" suppressHydrationWarning>
+          <body>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster position="top-center" reverseOrder={false} />
+              <Navbar />
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      </ViewTransition>
     </ClerkProvider>
   );
 }

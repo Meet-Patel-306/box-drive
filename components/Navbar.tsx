@@ -8,17 +8,9 @@ import { ModeToggle } from "./DarkModeBtn";
 import UserCard from "./UserCard";
 import { useUser } from "@clerk/nextjs";
 
-interface userInterface {
-  emailAddress: string;
-  id: string;
-  imageUrl: string;
-}
-interface navbarInterface {
-  user: userInterface;
-}
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isSignedIn, user } = useUser();
 
   if (!isSignedIn) {
     return null;

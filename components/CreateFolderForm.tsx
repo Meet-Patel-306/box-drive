@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardFooter } from "./ui/card";
 import {
   Form,
   FormControl,
@@ -16,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 type Props = {
   onCloseClick: (value: boolean) => void;
@@ -55,11 +53,11 @@ export default function CreateFolderForm({
       }
       const res = axios.post("/api/folder/create", formData);
       // toast.success("Folder Create");
-      console.log(res);
+      //console.log(res);
       onCloseClick(false);
       setRefreshTrigger((prev: number) => prev + 1);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
   return (

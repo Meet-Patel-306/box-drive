@@ -15,7 +15,7 @@ export async function GET() {
       .from(files)
       .where(and(eq(files.userId, userId), eq(files.isTrash, true)));
     // Convert BigInts to strings
-    console.log(filesTrashAll);
+    //console.log(filesTrashAll);
     const filesTrash = filesTrashAll.map((file: Record<string, unknown>) =>
       Object.fromEntries(
         Object.entries(file).map(([key, value]) => [

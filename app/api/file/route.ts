@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const queryUserId = searchParams.get("userId");
     const parentId = searchParams.get("parentId");
-    console.log(queryUserId, userId, queryUserId === userId);
+    ////console.log(queryUserId, userId, queryUserId === userId);
     if (!queryUserId || queryUserId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         .select()
         .from(files)
         .where(and(eq(files.userId, userId), eq(files.parentId, parentId)));
-      console.log(userFiles);
+      ////console.log(userFiles);
     }
     // not parentId mean files at root directory
     else {

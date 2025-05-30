@@ -40,7 +40,7 @@ export async function PUT(
       .set({ name: name })
       .where(and(eq(files.id, fileId), eq(files.userId, userId)))
       .returning();
-    // console.log(updateFile);
+    // //console.log(updateFile);
     return NextResponse.json(updateFile);
   } catch (err) {}
 }

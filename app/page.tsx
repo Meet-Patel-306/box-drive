@@ -6,6 +6,6 @@ export default async function Home() {
   if (!userId) {
     redirect("/sign-in");
   }
-  console.log(userId);
+  //console.log(userId);
   return <DashboardContent userId={userId || ""} />;
 }

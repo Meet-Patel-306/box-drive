@@ -34,7 +34,7 @@ export async function PUT(
       .set({ isStarred: !file.isStarred })
       .where(and(eq(files.id, fileId), eq(files.userId, userId)))
       .returning();
-    console.log(file, "okok");
+    //console.log(file, "okok");
     return NextResponse.json(updateFile);
   } catch (err) {
     console.error("Error creating folder:", err);

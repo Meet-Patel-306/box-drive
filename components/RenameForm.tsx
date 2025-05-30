@@ -1,6 +1,4 @@
 "use client";
-
-import { Card, CardContent, CardFooter } from "./ui/card";
 import {
   Form,
   FormControl,
@@ -16,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 type Props = {
   onCloseClick: (value: boolean) => void;
@@ -43,10 +40,10 @@ export default function RenameFileForm({
     try {
       const res = axios.put(`/api/file/${fileId}/rename`, { name: data.name });
       // toast.success("Folder Create");
-      console.log(res);
+      //console.log(res);
       onCloseClick(false);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
   return (

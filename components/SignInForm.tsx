@@ -17,6 +17,8 @@ import { Input } from "./ui/input";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Loader, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 export default function SignInForm() {
   const signInForm = useForm<z.infer<typeof signInSchema>>({
@@ -27,6 +29,7 @@ export default function SignInForm() {
     },
   });
   const { signIn, isLoaded, setActive } = useSignIn();
+  const { isSignedIn, user } = useUser();
   const [signInError, setSignInError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,9 +46,9 @@ export default function SignInForm() {
       });
       if (res.status === "complete") {
         await setActive({ session: res?.createdSessionId });
-        console.log("ok", res);
+        //console.log("ok", res);
       } else {
-        console.log("faile");
+        //console.log("faile");
       }
     } catch (err: any) {
       setSignInError(err.errors?.[0].message || "Something went wrong");
@@ -53,6 +56,13 @@ export default function SignInForm() {
       setIsSubmitting(false);
     }
   };
+  if (isSignedIn) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <Loader className="mr-2 h-10 w-10 animate-spin" />
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -113,7 +123,7 @@ export default function SignInForm() {
                             <Eye
                               className="absolute right-4 top-4 z-10 cursor-pointer text-gray-500"
                               onClick={() => {
-                                setIsView(!isView), console.log(isView);
+                                setIsView(!isView), //console.log(isView);
                               }}
                             />
                           ) : (
@@ -134,9 +144,12 @@ export default function SignInForm() {
                   </Button>
                   <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{" "}
-                    <a href="/sign-up" className="underline underline-offset-4">
+                    <Link
+                      href="/sign-up"
+                      className="underline underline-offset-4"
+                    >
                       Sign up
-                    </a>
+                    </Link>
                   </div>
                 </form>
               </Form>
