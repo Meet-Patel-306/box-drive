@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./DarkModeBtn";
 import UserCard from "./UserCard";
+import { useUser } from "@clerk/nextjs";
 
 interface userInterface {
   emailAddress: string;
@@ -15,8 +16,13 @@ interface userInterface {
 interface navbarInterface {
   user: userInterface;
 }
-export default function Navbar({ user }: navbarInterface) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  if (!isSignedIn) {
+    return null;
+  }
 
   return (
     <nav className="bg-background border-b border-border shadow-sm">
@@ -51,8 +57,8 @@ export default function Navbar({ user }: navbarInterface) {
           <div className="hidden md:flex">
             <ModeToggle />
             <UserCard
-              avatarUrl={user.imageUrl || ""}
-              email={user.emailAddress || ""}
+              avatarUrl={user?.imageUrl || ""}
+              email={user?.emailAddresses?.[0]?.emailAddress || ""}
             />
           </div>
 
@@ -61,8 +67,8 @@ export default function Navbar({ user }: navbarInterface) {
             <div className="flex">
               <ModeToggle />
               <UserCard
-                avatarUrl={user.imageUrl || ""}
-                email={user.emailAddress || ""}
+                avatarUrl={user?.imageUrl || ""}
+                email={user?.emailAddresses?.[0]?.emailAddress || ""}
               />
             </div>
             <Button

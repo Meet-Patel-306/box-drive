@@ -6,6 +6,38 @@ import { NextRequest, NextResponse } from "next/server";
 import ImageKit from "imagekit";
 import { v4 as uuid4 } from "uuid";
 
+async function updateFolderSizeRecursively(
+  folderId: string,
+  sizeToAdd: number,
+  userId: string
+) {
+  let currentFolderId = folderId || null;
+
+  while (currentFolderId) {
+    const [folder] = await db
+      .select()
+      .from(files)
+      .where(
+        and(
+          eq(files.id, currentFolderId),
+          eq(files.userId, userId),
+          eq(files.isFolder, true)
+        )
+      );
+
+    if (!folder) break;
+
+    const newSize = (folder.size || 0) + sizeToAdd;
+
+    await db
+      .update(files)
+      .set({ size: newSize })
+      .where(eq(files.id, currentFolderId));
+
+    currentFolderId = folder.parentId; // move up the chain
+  }
+}
+
 // upload file or image in imageKit after save file metadata in neon db
 
 const imagekit = new ImageKit({
@@ -87,6 +119,9 @@ export async function POST(req: NextRequest) {
       parentId: parentId,
     };
     const [newFile] = await db.insert(files).values(newFileData).returning();
+    if (parentId) {
+      await updateFolderSizeRecursively(parentId, newFile.size, userId);
+    }
     return NextResponse.json(newFile);
   } catch (err) {
     console.error("Error saving file:", err);

@@ -111,6 +111,7 @@ export default function FileUpload({
             closeClick={createFolderOpen}
             userId={userId || ""}
             currentFolder={currentFolder || ""}
+            setRefreshTrigger={setRefreshTrigger}
           />
         </div>
       )}

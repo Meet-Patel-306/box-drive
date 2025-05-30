@@ -23,6 +23,7 @@ type Props = {
   closeClick: boolean;
   userId: string;
   currentFolder: string;
+  setRefreshTrigger: (prev: any) => any;
 };
 
 export default function CreateFolderForm({
@@ -30,6 +31,7 @@ export default function CreateFolderForm({
   closeClick,
   userId,
   currentFolder,
+  setRefreshTrigger,
 }: Props) {
   // create folder on submit
   const createFolderFormSchema = z.object({
@@ -55,6 +57,7 @@ export default function CreateFolderForm({
       // toast.success("Folder Create");
       console.log(res);
       onCloseClick(false);
+      setRefreshTrigger((prev: number) => prev + 1);
     } catch (err) {
       console.log(err);
     }

@@ -96,160 +96,164 @@ export default function SingUpForm() {
   if (verify) {
     return (
       <>
+        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+          {isSubmitting ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Loader className="mr-2 h-10 w-10 animate-spin" />
+            </div>
+          ) : (
+            <div className="w-full flex justify-center border-gray-100 py-4 px-2 rounded-3xl">
+              <div className=" space-y-6">
+                <h1 className="text-2xl font-bold text-default-900 mb-0">
+                  Verify Your Email
+                </h1>
+                <p className="mt-0 text-default-500 text-center">
+                  We've sent a verification code to your email
+                </p>
+                {verifyError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{verifyError}</AlertDescription>
+                  </Alert>
+                )}
+                <Form {...otpForm}>
+                  <form
+                    onSubmit={otpForm.handleSubmit(handleVerificationSubmit)}
+                    className="space-y-6"
+                  >
+                    <FormField
+                      control={otpForm.control}
+                      name="pin"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>One-Time Password</FormLabel>
+                          <FormControl>
+                            <InputOTP maxLength={6} {...field}>
+                              <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button type="submit">Submit</Button>
+                  </form>
+                </Form>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
+    );
+  }
+  return (
+    <>
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
         {isSubmitting ? (
           <div className="w-full h-full flex justify-center items-center">
             <Loader className="mr-2 h-10 w-10 animate-spin" />
           </div>
         ) : (
-          <div className="w-full flex justify-center border-gray-100 py-4 px-2 rounded-3xl">
-            <div className=" space-y-6">
-              <h1 className="text-2xl font-bold text-default-900 mb-0">
-                Verify Your Email
+          <div className="w-full flex justify-center ">
+            <div className="w-2/3 space-y-6 border-2 border-gray-100 py-4 px-2 rounded-3xl">
+              <h1 className="text-2xl font-bold text-center">
+                Create Your Account
               </h1>
-              <p className="mt-0 text-default-500 text-center">
-                We've sent a verification code to your email
-              </p>
-              {verifyError && (
+              {authError && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{verifyError}</AlertDescription>
+                  <AlertDescription>{authError}</AlertDescription>
                 </Alert>
               )}
-              <Form {...otpForm}>
+              <Form {...form}>
                 <form
-                  onSubmit={otpForm.handleSubmit(handleVerificationSubmit)}
+                  onSubmit={form.handleSubmit(onSubmitForm)}
                   className="space-y-6"
                 >
                   <FormField
-                    control={otpForm.control}
-                    name="pin"
+                    control={form.control}
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>One-Time Password</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <InputOTP maxLength={6} {...field}>
-                            <InputOTPGroup>
-                              <InputOTPSlot index={0} />
-                              <InputOTPSlot index={1} />
-                              <InputOTPSlot index={2} />
-                              <InputOTPSlot index={3} />
-                              <InputOTPSlot index={4} />
-                              <InputOTPSlot index={5} />
-                            </InputOTPGroup>
-                          </InputOTP>
+                          <Input placeholder="xyz@gmail.com" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <Button type="submit">Submit</Button>
-                </form>
-              </Form>
-            </div>
-          </div>
-        )}
-      </>
-    );
-  }
-  return (
-    <>
-      {isSubmitting ? (
-        <div className="w-full h-full flex justify-center items-center">
-          <Loader className="mr-2 h-10 w-10 animate-spin" />
-        </div>
-      ) : (
-        <div className="w-full flex justify-center ">
-          <div className="w-2/3 space-y-6 border-2 border-gray-100 py-4 px-2 rounded-3xl">
-            <h1 className="text-2xl font-bold text-center">
-              Create Your Account
-            </h1>
-            {authError && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{authError}</AlertDescription>
-              </Alert>
-            )}
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmitForm)}
-                className="space-y-6"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="xyz@gmail.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type="password"
+                              placeholder="********"
+                              {...field}
+                            />
+                            {isView ? (
+                              <Eye
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => {
+                                  setIsView(!isView), console.log(isView);
+                                }}
+                              />
+                            ) : (
+                              <EyeOff
+                                className="absolute right-4 top-2 z-10 cursor-pointer text-gray-500"
+                                onClick={() => setIsView(!isView)}
+                              />
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
+                  <FormField
+                    control={form.control}
+                    name="passwordConfirmation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
                           <Input
                             type="password"
                             placeholder="********"
                             {...field}
                           />
-                          {isView ? (
-                            <Eye
-                              className="absolute right-4 top-4 z-10 cursor-pointer text-gray-500"
-                              onClick={() => {
-                                setIsView(!isView), console.log(isView);
-                              }}
-                            />
-                          ) : (
-                            <EyeOff
-                              className="absolute right-4 top-4 z-10 cursor-pointer text-gray-500"
-                              onClick={() => setIsView(!isView)}
-                            />
-                          )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="passwordConfirmation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="********"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Submitting..." : "Submit"}
-                </Button>
-              </form>
-            </Form>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit"}
+                  </Button>
+                </form>
+              </Form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

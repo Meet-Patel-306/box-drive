@@ -6,6 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface UserCardProps {
   email: string;
@@ -13,6 +15,13 @@ interface UserCardProps {
 }
 
 export default function UserCard({ email, avatarUrl }: UserCardProps) {
+  const { signOut } = useClerk();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -30,7 +39,9 @@ export default function UserCard({ email, avatarUrl }: UserCardProps) {
               <p className="text-sm text-muted-foreground">{email}</p>
             </div>
           </CardHeader>
-          <Button className="mx-2">Sign Out </Button>
+          <Button className="mx-2" onClick={handleSignOut}>
+            Sign Out{" "}
+          </Button>
         </Card>
       </PopoverContent>{" "}
     </Popover>

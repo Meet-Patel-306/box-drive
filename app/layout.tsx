@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import { currentUser, auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
@@ -28,19 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { userId } = await auth();
-  const user = await currentUser();
-  const userData = user
-    ? {
-        id: user.id,
-        imageUrl: user.imageUrl,
-        emailAddress: user.emailAddresses?.[0]?.emailAddress,
-      }
-    : {
-        id: "",
-        imageUrl: "",
-        emailAddress: "",
-      };
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
@@ -52,7 +38,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Toaster position="top-center" reverseOrder={false} />
-            {userId && <Navbar user={userData} />}
+            <Navbar />
             {children}
           </ThemeProvider>
         </body>
