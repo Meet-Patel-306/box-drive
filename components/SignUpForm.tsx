@@ -103,7 +103,7 @@ export default function SingUpForm() {
               <Loader className="mr-2 h-10 w-10 animate-spin" />
             </div>
           ) : (
-            <div className="w-full flex justify-center border-gray-200 py-4 px-2 rounded-3xl">
+            <div className="w-full flex justify-center border-gray-200 dark:border-gray-700 py-4 px-2 rounded-3xl">
               <div className=" space-y-6">
                 <h1 className="text-2xl font-bold text-default-900 mb-0">
                   Verify Your Email
@@ -165,7 +165,7 @@ export default function SingUpForm() {
           </div>
         ) : (
           <div className="w-full flex justify-center ">
-            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 py-4 px-2 rounded-3xl">
+            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 dark:border-gray-700 py-4 px-2 rounded-3xl">
               <h1 className="text-2xl font-bold text-center">
                 Create Your Account
               </h1>

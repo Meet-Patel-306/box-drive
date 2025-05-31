@@ -20,9 +20,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Box Drive",
   description: "Your file sharing and collaboration platform",
-  icons: {
-    icon: "/box-drive-logo.png",
-  },
 };
 
 export default async function RootLayout({
@@ -34,6 +31,7 @@ export default async function RootLayout({
     <ClerkProvider>
       <ViewTransition>
         <html lang="en" suppressHydrationWarning>
+          <link rel="icon" href="/box-drive-logo.png" sizes="any" />
           <body>
             <ThemeProvider
               attribute="class"

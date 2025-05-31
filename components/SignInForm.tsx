@@ -73,7 +73,7 @@ export default function SignInForm() {
           </div>
         ) : (
           <div className="w-full flex justify-center ">
-            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 py-4 px-2 rounded-3xl">
+            <div className="md:w-2/3 w-full space-y-6 border-2 border-gray-200 dark:border-gray-700 py-4 px-2 rounded-3xl">
               <h1 className="text-2xl font-bold text-center">
                 SignUp Your Account
               </h1>
