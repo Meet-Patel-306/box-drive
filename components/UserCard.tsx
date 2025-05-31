@@ -36,7 +36,7 @@ export default function UserCard({ email, avatarUrl }: UserCardProps) {
               <AvatarFallback>{email.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm text-muted-foreground">{email}</p>
+              <p className="text-sm text-muted-foreground break-all">{email}</p>
             </div>
           </CardHeader>
           <Button className="mx-2" onClick={handleSignOut}>
