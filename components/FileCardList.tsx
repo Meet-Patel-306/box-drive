@@ -133,9 +133,7 @@ export default function FileCardList({
           <div className="aspect-square w-1/4">
             {file.thumbnailUrl ? (
               <img
-                src={
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-                }
+                src={file.thumbnailUrl}
                 className="w-12 h-12"
                 loading="lazy"
               />
@@ -267,9 +265,7 @@ export default function FileCardList({
           <div className="flex items-center gap-3" onClick={onClickFolderOpen}>
             {file.thumbnailUrl ? (
               <img
-                src={
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-                }
+                src={file.thumbnailUrl}
                 className="w-12 h-12"
                 loading="lazy"
               />
