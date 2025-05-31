@@ -140,7 +140,12 @@ export default function FileCard({
             )}
           </div>
           <div className="grid gap-1">
-            <div className="font-semibold">{file?.name}</div>
+            <div
+              className="font-semibold truncate max-w-full"
+              title={file?.name}
+            >
+              {file?.name}
+            </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <FileTypeIcon className="w-4 h-4" />
               <span>{file?.type.split("/").pop()}</span>

@@ -71,7 +71,7 @@ export default function CreateFolderForm({
   };
   return (
     <div className="w-full h-full flex justify-center items-center ">
-      <div className="lg:w-1/5 md:w-1/3 w-10/12 border-2 border-gray-200 p-4 rounded-lg bg-white">
+      <div className="lg:w-1/5 md:w-1/3 w-10/12 border-2 border-gray-200 dark:border-gray-700 p-4 rounded-lg bg-white dark:bg-gray-900">
         <div className="flex justify-end pr-2">
           <X onClick={() => onCloseClick(!closeClick)} />
         </div>
